@@ -1,0 +1,8 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    { "id": "doc_1", "title": "A", "summary": "...", "tags": ["通知"], "created_at": "2025-10-10T09:00:00Z" },
+    { "id": "doc_2", "title": "B", "summary": "...", "tags": ["活动"], "created_at": "2025-10-09T09:00:00Z" }
+  ]
+}

@@ -1,0 +1,745 @@
+openapi: 3.0.3
+info:
+  title: Nova 信息流 API
+  version: 1.0.0
+  description: >-
+    面向协作与 Mock 的契约。统一响应结构：{"code", "msg", "data", "trace_id?"}
+servers:
+  - url: http://localhost:4010
+    description: 本地 Mock 服务器（Prism 示例端口）
+  - url: http://localhost:8000
+    description: 本地开发服务器（FastAPI 示例端口）
+
+paths:
+  /api/v1/docs:
+    get:
+      summary: 获取文档列表
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: size
+          schema: { type: integer, default: 20 }
+        - in: query
+          name: tag
+          schema: { type: string }
+        - in: query
+          name: source
+          schema: { type: string, enum: [yuque, wechat, qq, web] }
+        - in: query
+          name: sort
+          schema: { type: string, example: created_at:desc }
+        - in: query
+          name: fields
+          schema: { type: string, example: id,title,summary }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdListResponseDoc'
+              examples:
+                default:
+                  $ref: '#/components/examples/DocListSuccess'
+    post:
+      summary: 新增文档
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocRequest'
+            examples:
+              default:
+                $ref: '#/components/examples/CreateDocRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdCreatedId'
+              examples:
+                default:
+                  value: { code: 201, msg: created, data: { id: "doc_123" } }
+
+  /api/v1/docs/{id}:
+    get:
+      summary: 获取单个文档
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdResponseDoc'
+              examples:
+                default:
+                  $ref: '#/components/examples/DocDetailSuccess'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdError' }
+              examples:
+                notFound:
+                  value: { code: 404, msg: not found, data: null }
+    put:
+      summary: 更新文档（整体）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateDocRequest' }
+      responses:
+        '200':
+          description: updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdUpdatedId' }
+    delete:
+      summary: 删除文档
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: deleted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdDeleted' }
+
+  /api/v1/preprocess/clean:
+    post:
+      summary: 文本清洗
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreprocessCleanRequest' }
+            examples:
+              default:
+                $ref: '#/components/examples/PreprocessCleanRequest'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PreprocessCleanResponse' }
+
+  /api/v1/preprocess/dedup:
+    post:
+      summary: 去重检测
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreprocessDedupRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PreprocessDedupResponse' }
+
+  /api/v1/preprocess/tags:
+    post:
+      summary: 分词与标签提取
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreprocessTagsRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PreprocessTagsResponse' }
+
+  /api/v1/ai/summary:
+    post:
+      summary: 生成摘要
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AiSummaryRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AiSummaryResponse' }
+
+  /api/v1/ai/classify:
+    post:
+      summary: 文本分类
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AiClassifyRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AiClassifyResponse' }
+
+  /api/v1/ai/recognize:
+    post:
+      summary: 图片/表格/公式识别
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AiRecognizeRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AiRecognizeResponse' }
+
+  /api/v1/push/webhook:
+    post:
+      summary: 推送到 Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WebhookPushRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdOk' }
+
+  /api/v1/push/rss:
+    get:
+      summary: 生成 RSS（示意，不在 Mock 返回 XML）
+      parameters:
+        - in: query
+          name: tag
+          schema: { type: string }
+      responses:
+        '200':
+          description: xml feed
+          content:
+            application/xml:
+              schema:
+                type: string
+              example: |
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <rss><channel><title>Nova Feed</title></channel></rss>
+
+  /api/v1/push/email:
+    post:
+      summary: 邮件推送
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmailPushRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdOk' }
+
+  /api/v1/stream:
+    get:
+      summary: 获取信息流
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: size
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdListResponseStreamItem' }
+
+  /api/v1/search:
+    get:
+      summary: 检索（短查询）
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - in: query
+          name: tag
+          schema: { type: string }
+        - in: query
+          name: mode
+          schema: { type: string, enum: [vector, precise, hybrid] }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdListResponseSearchItem' }
+
+  /api/v1/views/{id}:
+    get:
+      summary: 获取保存的视图
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ViewResponse' }
+              examples:
+                default:
+                  value:
+                    code: 200
+                    msg: success
+                    data:
+                      id: view_001
+                      name: 最近通知
+                      query: { tag: "通知", sort: "created_at:desc" }
+
+  /api/v1/bot/send:
+    post:
+      summary: Bot 发送消息
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BotSendRequest' }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdOk' }
+
+  /graphql:
+    post:
+      summary: GraphQL 端点（支持查询和检索）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query: { type: string }
+                variables: { type: object, additionalProperties: true }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties: true
+              examples:
+                default:
+                  value:
+                    data:
+                      stream:
+                        items:
+                          - { id: "doc_1", title: "A" }
+                          - { id: "doc_2", title: "B" }
+
+  /api/v1/imports:
+    post:
+      summary: 提交导入作业
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ImportJobRequest' }
+            examples:
+              default:
+                $ref: '#/components/examples/ImportJobRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StdCreatedJob' }
+
+  /api/v1/imports/{job_id}:
+    get:
+      summary: 查询导入作业
+      parameters:
+        - in: path
+          name: job_id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ImportJobStatus' }
+
+components:
+  schemas:
+    StdOk:
+      type: object
+      properties:
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: success }
+        data: { type: object, nullable: true }
+    StdError:
+      type: object
+      properties:
+        code: { type: integer, example: 400 }
+        msg: { type: string, example: bad request }
+        data: { nullable: true }
+        trace_id: { type: string, example: "f3e0..." }
+    StdCreatedId:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            id: { type: string }
+    StdUpdatedId:
+      allOf:
+        - $ref: '#/components/schemas/StdOk'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                id: { type: string }
+    StdDeleted:
+      type: object
+      properties:
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: deleted }
+        data: { nullable: true }
+
+    Doc:
+      type: object
+      required: [id, source_id, title, created_at]
+      properties:
+        id: { type: string, example: doc_123 }
+        source_id: { type: string, example: yuque:abc123 }
+        source: { type: string, enum: [yuque, wechat, qq, web] }
+        title: { type: string }
+        content: { type: string }
+        summary: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        author: { type: string }
+        url: { type: string }
+        avatar: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    StreamItem:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        created_at: { type: string, format: date-time }
+
+    CreateDocRequest:
+      type: object
+      required: [title, content, source]
+      properties:
+        title: { type: string }
+        content: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        source: { type: string }
+    UpdateDocRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateDocRequest'
+
+    PreprocessCleanRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    PreprocessCleanResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            cleaned_content: { type: string }
+
+    PreprocessDedupRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    PreprocessDedupResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            is_duplicate: { type: boolean }
+            similar_id: { type: string }
+
+    PreprocessTagsRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    PreprocessTagsResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            tags:
+              type: array
+              items: { type: string }
+            keywords:
+              type: array
+              items: { type: string }
+
+    AiSummaryRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    AiSummaryResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            summary: { type: string }
+
+    AiClassifyRequest:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+    AiClassifyResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            category: { type: string, example: 通知 }
+            confidence: { type: number, format: float, example: 0.95 }
+
+    AiRecognizeRequest:
+      type: object
+      required: [file]
+      properties:
+        file: { type: string, description: base64 或 文件链接 }
+    AiRecognizeResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            type: { type: string, enum: [image, table, formula] }
+            result: { type: object, additionalProperties: true }
+
+    SearchRequest:
+      type: object
+      properties:
+        query: { type: string }
+        category: { type: string }
+        tag: { type: string }
+        mode: { type: string, enum: [vector, precise, hybrid] }
+    SearchItem:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        created_at: { type: string, format: date-time }
+
+    WebhookPushRequest:
+      type: object
+      required: [target_url, payload]
+      properties:
+        target_url: { type: string }
+        payload:
+          type: object
+          additionalProperties: true
+
+    EmailPushRequest:
+      type: object
+      required: [to, subject, content]
+      properties:
+        to: { type: string }
+        subject: { type: string }
+        content: { type: string }
+
+    ImportJobRequest:
+      type: object
+      required: [path, format, schema_version, source]
+      properties:
+        path: { type: string, example: s3://bucket/folder/docs-20251010.ndjson.gz }
+        format: { type: string, enum: [ndjson, parquet] }
+        schema_version: { type: string, example: '1.0.0' }
+        source: { type: string, example: yuque }
+    StdCreatedJob:
+      type: object
+      properties:
+        code: { type: integer, example: 201 }
+        msg: { type: string, example: created }
+        data:
+          type: object
+          properties:
+            job_id: { type: string, example: imp_123 }
+    ImportJobStatus:
+      type: object
+      properties:
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: success }
+        data:
+          type: object
+          properties:
+            status: { type: string, enum: [queued, running, succeeded, failed, partial] }
+            processed: { type: integer, example: 5000 }
+            failed: { type: integer, example: 3 }
+            next_cursor: { type: string, nullable: true }
+
+    ViewResponse:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: object
+          properties:
+            id: { type: string }
+            name: { type: string }
+            query:
+              type: object
+              additionalProperties: true
+
+    BotSendRequest:
+      type: object
+      required: [platform, target, content]
+      properties:
+        platform: { type: string, example: qq }
+        target: { type: string, example: group:123456 }
+        content: { type: string }
+
+    StdResponseDoc:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data: { $ref: '#/components/schemas/Doc' }
+    StdListResponseDoc:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Doc' }
+    StdListResponseStreamItem:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/StreamItem' }
+    StdListResponseSearchItem:
+      type: object
+      properties:
+        code: { type: integer }
+        msg: { type: string }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/SearchItem' }
+
+  examples:
+    DocListSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          - { id: "doc_1", source_id: "yuque:1", source: yuque, title: "A", summary: "...", tags: ["通知"], created_at: "2025-10-10T09:00:00Z" }
+          - { id: "doc_2", source_id: "web:2", source: web, title: "B", summary: "...", tags: ["活动"], created_at: "2025-10-09T09:00:00Z" }
+    DocDetailSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          id: doc_1
+          source_id: yuque:1
+          source: yuque
+          title: 示例标题
+          content: 这是正文...
+          summary: 摘要...
+          tags: [通知]
+          author: 张三
+          url: https://...
+          created_at: 2025-10-10T09:00:00Z
+          updated_at: 2025-10-10T10:00:00Z
+    CreateDocRequest:
+      value:
+        title: 新文档
+        content: 正文内容
+        tags: [通知]
+        source: yuque
+    PreprocessCleanRequest:
+      value:
+        content: "【广告】同学们大家好！\n活动时间：..."
+    ImportJobRequest:
+      value:
+        path: s3://bucket/folder/docs-20251010.ndjson.gz
+        format: ndjson
+        schema_version: "1.0.0"
+        source: yuque

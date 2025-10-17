@@ -1,0 +1,10 @@
+{
+  "data": {
+    "stream": {
+      "items": [
+        { "id": "doc_1", "title": "A" },
+        { "id": "doc_2", "title": "B" }
+      ]
+    }
+  }
+}

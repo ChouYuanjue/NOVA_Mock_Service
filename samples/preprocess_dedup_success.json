@@ -1,0 +1,8 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "is_duplicate": false,
+    "similar_id": null
+  }
+}
