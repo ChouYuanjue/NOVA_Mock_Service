@@ -40,12 +40,13 @@
    - http://localhost:4011/api/v1/imports/imp_123
    - http://localhost:4011/api/v1/bot/send
    - http://localhost:4011/graphql
+   - ...
 
 ## 如何扩展
 - 新增接口：
-  1. 在 contracts/openapi.yaml 中补充端点和 schema。
-  2. 在 samples/ 下增加对应的 JSON 示例。
-  3. FastAPI 方案下，在 server/server.py 补充路由。
+  - 在 contracts/openapi.yaml 中补充端点和 schema。
+  - 在 samples/ 下增加对应的 JSON 示例。
+  - FastAPI 方案下，在 server/server.py 补充路由。
 - 新增批量导入样例：
   - 在 samples/ndjson/ 下添加 NDJSON 文件。
 
