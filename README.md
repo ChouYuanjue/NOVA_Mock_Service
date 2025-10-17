@@ -1,7 +1,5 @@
 # Nova Mock Service 使用说明
 
-本项目为 Nova 2025 信息整合工具项目协作对接的 Mock Service，对齐《协作对接方案（草案）》设计，便于前后端、各组并行开发和联调。
-
 ## 目录结构
 - `contracts/`         —— OpenAPI 契约文件（openapi.yaml）
 - `samples/`           —— 各接口的 Golden JSON 示例数据
