@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pathlib import Path
 import json
+from git import Repo
 
 BASE = Path(__file__).resolve().parent.parent
 SAMPLES = BASE / "samples"
@@ -122,3 +123,39 @@ async def graphql():
 @app.get("/")
 async def root():
     return {"msg": "Nova Mock is running"}
+
+# 历史版本管理相关
+@app.get("/api/v1/docs/{doc_id}/versions")
+async def get_versions(doc_id: str):
+    repo = Repo(f"repos/{doc_id}")
+    commits = list(repo.iter_commits())
+    versions = [
+        {
+            "version_id": commit.hexsha,
+            "message": commit.message,
+            "author": commit.author.name,
+            "timestamp": commit.committed_datetime.isoformat()
+        }
+        for commit in commits
+    ]
+    return JSONResponse({"code": 200, "msg": "success", "data": {"versions": versions}})
+
+@app.get("/api/v1/docs/{doc_id}/versions/{commit_hash}")
+async def get_version(doc_id: str, commit_hash: str):
+    repo = Repo(f"repos/{doc_id}")
+    content = repo.git.show(commit_hash)
+    return JSONResponse({"code": 200, "msg": "success", "data": {"content": content}})
+
+@app.get("/api/v1/docs/{doc_id}/diff")
+async def get_diff(doc_id: str, from_commit: str, to_commit: str):
+    repo = Repo(f"repos/{doc_id}")
+    diff = repo.git.diff(from_commit, to_commit)
+    return JSONResponse({"code": 200, "msg": "success", "data": {"diff": diff}})
+
+@app.post("/api/v1/docs/{doc_id}/revert")
+async def revert_version(doc_id: str, commit_hash: str, message: str):
+    repo = Repo(f"repos/{doc_id}")
+    repo.git.reset("--hard", commit_hash)
+    repo.git.commit("-m", message)
+    new_version = repo.head.commit.hexsha
+    return JSONResponse({"code": 200, "msg": "reverted", "data": {"new_version": new_version}})

@@ -405,6 +405,144 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ImportJobStatus' }
 
+  /api/v1/docs/{doc_id}/versions:
+    get:
+      summary: 获取文档的历史版本列表
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  msg:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      versions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            version_id:
+                              type: string
+                            message:
+                              type: string
+                            author:
+                              type: string
+                            timestamp:
+                              type: string
+
+  /api/v1/docs/{doc_id}/versions/{commit_hash}:
+    get:
+      summary: 获取文档的特定历史版本
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema: { type: string }
+        - in: path
+          name: commit_hash
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  msg:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+
+  /api/v1/docs/{doc_id}/diff:
+    get:
+      summary: 获取文档的版本差异
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: from_commit
+          required: true
+          schema: { type: string }
+        - in: query
+          name: to_commit
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  msg:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      diff:
+                        type: string
+
+  /api/v1/docs/{doc_id}/revert:
+    post:
+      summary: 回滚文档到指定版本
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commit_hash:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: reverted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  msg:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      new_version:
+                        type: string
+
 components:
   schemas:
     StdOk:
@@ -743,3 +881,44 @@ components:
         format: ndjson
         schema_version: "1.0.0"
         source: yuque
+    DocVersionListSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          versions:
+            - version_id: v1
+              message: 初始版本
+              author: 用户A
+              timestamp: "2025-10-10T09:00:00Z"
+            - version_id: v2
+              message: 更新标题
+              author: 用户B
+              timestamp: "2025-10-11T09:00:00Z"
+    DocVersionDetailSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          content: 这是文档的特定历史版本内容。
+    DocDiffSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          diff: |-
+            --- a.txt
+            +++ b.txt
+            @@ -1,3 +1,3 @@
+            - Hello World
+            + Hello Nova
+            - This is a sample document.
+            + This is a Nova sample document.
+            - Have a nice day!
+            + Have a nice Nova day!
+    DocRevertSuccess:
+      value:
+        code: 200
+        msg: success
+        data:
+          new_version: v2
