@@ -7,7 +7,7 @@
 - 安装 Prism（一次性）
   npm i -g @stoplight/prism-cli
 - 启动：
-  prism mock ../contracts/openapi.yaml --port 4010
+  prism mock contracts/openapi.yaml --port 4010
 - 访问：
   http://localhost:4010/api/v1/docs
 
