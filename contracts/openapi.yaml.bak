@@ -17,22 +17,22 @@ paths:
       parameters:
         - in: query
           name: page
-          schema: {type: integer, default: 1}
+          schema: { type: integer, default: 1 }
         - in: query
           name: size
-          schema: {type: integer, default: 20}
+          schema: { type: integer, default: 20 }
         - in: query
           name: tag
-          schema: {type: string}
+          schema: { type: string }
         - in: query
           name: source
-          schema: {type: string, enum: [yuque, wechat, qq, web]}
+          schema: { type: string, enum: [yuque, wechat, qq, web] }
         - in: query
           name: sort
-          schema: {type: string, example: "created_at:desc"}
+          schema: { type: string, example: "created_at:desc" }
         - in: query
           name: fields
-          schema: {type: string, example: "id,title,summary"}
+          schema: { type: string, example: "id,title,summary" }
       responses:
         '200':
           description: success
@@ -43,10 +43,6 @@ paths:
               examples:
                 default:
                   $ref: '#/components/examples/DocListSuccess'
-      operationId: get_api_v1_docs
-      description: 'TODO: add description.'
-      tags:
-        - Docs
     post:
       summary: 新增文档
       requestBody:
@@ -67,11 +63,7 @@ paths:
                 $ref: '#/components/schemas/StdCreatedId'
               examples:
                 default:
-                  value: {code: 201, msg: created, data: {id: "doc_123"}}
-      operationId: post_api_v1_docs
-      description: 'TODO: add description.'
-      tags:
-        - Docs
+                  value: { code: 201, msg: created, data: { id: "doc_123" } }
 
   /api/v1/docs/{id}:
     get:
@@ -80,7 +72,7 @@ paths:
         - in: path
           name: id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
@@ -95,53 +87,41 @@ paths:
           description: not found
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdError'}
+              schema: { $ref: '#/components/schemas/StdError' }
               examples:
                 notFound:
-                  value: {code: 404, msg: not found, data: null}
-      operationId: get_api_v1_docs_id
-      description: 'TODO: add description.'
-      tags:
-        - Docs
+                  value: { code: 404, msg: not found, data: null }
     put:
       summary: 更新文档（整体）
       parameters:
         - in: path
           name: id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/UpdateDocRequest'}
+            schema: { $ref: '#/components/schemas/UpdateDocRequest' }
       responses:
         '200':
           description: updated
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdUpdatedId'}
-      operationId: put_api_v1_docs_id
-      description: 'TODO: add description.'
-      tags:
-        - Docs
+              schema: { $ref: '#/components/schemas/StdUpdatedId' }
     delete:
       summary: 删除文档
       parameters:
         - in: path
           name: id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: deleted
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdDeleted'}
-      operationId: delete_api_v1_docs_id
-      description: 'TODO: add description.'
-      tags:
-        - Docs
+              schema: { $ref: '#/components/schemas/StdDeleted' }
 
   /api/v1/preprocess/clean:
     post:
@@ -150,7 +130,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/PreprocessCleanRequest'}
+            schema: { $ref: '#/components/schemas/PreprocessCleanRequest' }
             examples:
               default:
                 $ref: '#/components/examples/PreprocessCleanRequest'
@@ -159,11 +139,7 @@ paths:
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/PreprocessCleanResponse'}
-      operationId: post_api_v1_preprocess_clean
-      description: 'TODO: add description.'
-      tags:
-        - Preprocess
+              schema: { $ref: '#/components/schemas/PreprocessCleanResponse' }
 
   /api/v1/preprocess/dedup:
     post:
@@ -172,17 +148,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/PreprocessDedupRequest'}
+            schema: { $ref: '#/components/schemas/PreprocessDedupRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/PreprocessDedupResponse'}
-      operationId: post_api_v1_preprocess_dedup
-      description: 'TODO: add description.'
-      tags:
-        - Preprocess
+              schema: { $ref: '#/components/schemas/PreprocessDedupResponse' }
 
   /api/v1/preprocess/tags:
     post:
@@ -191,17 +163,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/PreprocessTagsRequest'}
+            schema: { $ref: '#/components/schemas/PreprocessTagsRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/PreprocessTagsResponse'}
-      operationId: post_api_v1_preprocess_tags
-      description: 'TODO: add description.'
-      tags:
-        - Preprocess
+              schema: { $ref: '#/components/schemas/PreprocessTagsResponse' }
 
   /api/v1/ai/summary:
     post:
@@ -210,17 +178,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/AiSummaryRequest'}
+            schema: { $ref: '#/components/schemas/AiSummaryRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/AiSummaryResponse'}
-      operationId: post_api_v1_ai_summary
-      description: 'TODO: add description.'
-      tags:
-        - Ai
+              schema: { $ref: '#/components/schemas/AiSummaryResponse' }
 
   /api/v1/ai/classify:
     post:
@@ -229,17 +193,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/AiClassifyRequest'}
+            schema: { $ref: '#/components/schemas/AiClassifyRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/AiClassifyResponse'}
-      operationId: post_api_v1_ai_classify
-      description: 'TODO: add description.'
-      tags:
-        - Ai
+              schema: { $ref: '#/components/schemas/AiClassifyResponse' }
 
   /api/v1/ai/recognize:
     post:
@@ -248,17 +208,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/AiRecognizeRequest'}
+            schema: { $ref: '#/components/schemas/AiRecognizeRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/AiRecognizeResponse'}
-      operationId: post_api_v1_ai_recognize
-      description: 'TODO: add description.'
-      tags:
-        - Ai
+              schema: { $ref: '#/components/schemas/AiRecognizeResponse' }
 
   /api/v1/push/webhook:
     post:
@@ -267,17 +223,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/WebhookPushRequest'}
+            schema: { $ref: '#/components/schemas/WebhookPushRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdOk'}
-      operationId: post_api_v1_push_webhook
-      description: 'TODO: add description.'
-      tags:
-        - Push
+              schema: { $ref: '#/components/schemas/StdOk' }
 
   /api/v1/push/rss:
     get:
@@ -285,7 +237,7 @@ paths:
       parameters:
         - in: query
           name: tag
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: xml feed
@@ -297,10 +249,6 @@ paths:
                 <?xml version="1.0" encoding="UTF-8" ?>
                 <rss><channel><title>Nova Feed</title></channel></rss>
 
-      operationId: get_api_v1_push_rss
-      description: 'TODO: add description.'
-      tags:
-        - Push
   /api/v1/push/email:
     post:
       summary: 邮件推送
@@ -308,17 +256,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/EmailPushRequest'}
+            schema: { $ref: '#/components/schemas/EmailPushRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdOk'}
-      operationId: post_api_v1_push_email
-      description: 'TODO: add description.'
-      tags:
-        - Push
+              schema: { $ref: '#/components/schemas/StdOk' }
 
   /api/v1/stream:
     get:
@@ -326,20 +270,16 @@ paths:
       parameters:
         - in: query
           name: page
-          schema: {type: integer, default: 1}
+          schema: { type: integer, default: 1 }
         - in: query
           name: size
-          schema: {type: integer, default: 20}
+          schema: { type: integer, default: 20 }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdListResponseStreamItem'}
-      operationId: get_api_v1_stream
-      description: 'TODO: add description.'
-      tags:
-        - Stream
+              schema: { $ref: '#/components/schemas/StdListResponseStreamItem' }
 
   /api/v1/search:
     get:
@@ -347,23 +287,19 @@ paths:
       parameters:
         - in: query
           name: q
-          schema: {type: string}
+          schema: { type: string }
         - in: query
           name: tag
-          schema: {type: string}
+          schema: { type: string }
         - in: query
           name: mode
-          schema: {type: string, enum: [vector, precise, hybrid]}
+          schema: { type: string, enum: [vector, precise, hybrid] }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdListResponseSearchItem'}
-      operationId: get_api_v1_search
-      description: 'TODO: add description.'
-      tags:
-        - Search
+              schema: { $ref: '#/components/schemas/StdListResponseSearchItem' }
 
   /api/v1/views/{id}:
     get:
@@ -372,13 +308,13 @@ paths:
         - in: path
           name: id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/ViewResponse'}
+              schema: { $ref: '#/components/schemas/ViewResponse' }
               examples:
                 default:
                   value:
@@ -387,11 +323,7 @@ paths:
                     data:
                       id: view_001
                       name: 最近通知
-                      query: {tag: "通知", sort: "created_at:desc"}
-      operationId: get_api_v1_views_id
-      description: 'TODO: add description.'
-      tags:
-        - Views
+                      query: { tag: "通知", sort: "created_at:desc" }
 
   /api/v1/bot/send:
     post:
@@ -400,17 +332,13 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/BotSendRequest'}
+            schema: { $ref: '#/components/schemas/BotSendRequest' }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdOk'}
-      operationId: post_api_v1_bot_send
-      description: 'TODO: add description.'
-      tags:
-        - Bot
+              schema: { $ref: '#/components/schemas/StdOk' }
 
   /graphql:
     post:
@@ -422,8 +350,8 @@ paths:
             schema:
               type: object
               properties:
-                query: {type: string}
-                variables: {type: object, additionalProperties: true}
+                query: { type: string }
+                variables: { type: object, additionalProperties: true }
       responses:
         '200':
           description: success
@@ -441,12 +369,9 @@ paths:
                     data:
                       stream:
                         items:
-                          - {id: "doc_1", title: "A"}
-                          - {id: "doc_2", title: "B"}
-      operationId: post_graphql
-      description: 'TODO: add description.'
-      tags:
-        - Graphql
+                          - { id: "doc_1", title: "A" }
+                          - { id: "doc_2", title: "B" }
+
   /api/v1/imports:
     post:
       summary: 提交导入作业
@@ -454,7 +379,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/ImportJobRequest'}
+            schema: { $ref: '#/components/schemas/ImportJobRequest' }
             examples:
               default:
                 $ref: '#/components/examples/ImportJobRequest'
@@ -463,11 +388,7 @@ paths:
           description: created
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/StdCreatedJob'}
-      operationId: post_api_v1_imports
-      description: 'TODO: add description.'
-      tags:
-        - Imports
+              schema: { $ref: '#/components/schemas/StdCreatedJob' }
 
   /api/v1/imports/{job_id}:
     get:
@@ -476,17 +397,13 @@ paths:
         - in: path
           name: job_id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/ImportJobStatus'}
-      operationId: get_api_v1_imports_job_id
-      description: 'TODO: add description.'
-      tags:
-        - Imports
+              schema: { $ref: '#/components/schemas/ImportJobStatus' }
 
   /api/v1/docs/{doc_id}/versions:
     get:
@@ -495,7 +412,7 @@ paths:
         - in: path
           name: doc_id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
@@ -525,10 +442,6 @@ paths:
                             timestamp:
                               type: string
 
-      operationId: get_api_v1_docs_doc_id_versions
-      description: 'TODO: add description.'
-      tags:
-        - Docs
   /api/v1/docs/{doc_id}/versions/{commit_hash}:
     get:
       summary: 获取文档的特定历史版本
@@ -536,11 +449,11 @@ paths:
         - in: path
           name: doc_id
           required: true
-          schema: {type: string}
+          schema: { type: string }
         - in: path
           name: commit_hash
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
@@ -559,10 +472,6 @@ paths:
                       content:
                         type: string
 
-      operationId: get_api_v1_docs_doc_id_versions_commit_hash
-      description: 'TODO: add description.'
-      tags:
-        - Docs
   /api/v1/docs/{doc_id}/diff:
     get:
       summary: 获取文档的版本差异
@@ -570,15 +479,15 @@ paths:
         - in: path
           name: doc_id
           required: true
-          schema: {type: string}
+          schema: { type: string }
         - in: query
           name: from_commit
           required: true
-          schema: {type: string}
+          schema: { type: string }
         - in: query
           name: to_commit
           required: true
-          schema: {type: string}
+          schema: { type: string }
       responses:
         '200':
           description: success
@@ -597,10 +506,6 @@ paths:
                       diff:
                         type: string
 
-      operationId: get_api_v1_docs_doc_id_diff
-      description: 'TODO: add description.'
-      tags:
-        - Docs
   /api/v1/docs/{doc_id}/revert:
     post:
       summary: 回滚文档到指定版本
@@ -608,7 +513,7 @@ paths:
         - in: path
           name: doc_id
           required: true
-          schema: {type: string}
+          schema: { type: string }
       requestBody:
         required: true
         content:
@@ -638,36 +543,32 @@ paths:
                       new_version:
                         type: string
 
-      operationId: post_api_v1_docs_doc_id_revert
-      description: 'TODO: add description.'
-      tags:
-        - Docs
 components:
   schemas:
     StdOk:
       type: object
       properties:
-        code: {type: integer, example: 200}
-        msg: {type: string, example: success}
-        data: {type: object, nullable: true}
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: success }
+        data: { type: object, nullable: true }
     StdError:
       type: object
       properties:
-        code: {type: integer, example: 400}
-        msg: {type: string, example: bad request}
+        code: { type: integer, example: 400 }
+        msg: { type: string, example: bad request }
         data:
           type: object
           nullable: true
-        trace_id: {type: string, example: "f3e0..."}
+        trace_id: { type: string, example: "f3e0..." }
     StdCreatedId:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            id: {type: string}
+            id: { type: string }
     StdUpdatedId:
       allOf:
         - $ref: '#/components/schemas/StdOk'
@@ -676,168 +577,178 @@ components:
             data:
               type: object
               properties:
-                id: {type: string}
+                id: { type: string }
     StdDeleted:
       type: object
       properties:
-        code: {type: integer, example: 200}
-        msg: {type: string, example: deleted}
-        data: {nullable: true}
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: deleted }
+        data: { nullable: true }
+
     Doc:
       type: object
       required: [id, source_id, title, created_at]
       properties:
-        id: {type: string, example: doc_123}
-        source_id: {type: string, example: "yuque:abc123"}
-        source: {type: string, enum: [yuque, wechat, qq, web]}
-        title: {type: string}
-        content: {type: string}
-        summary: {type: string}
+        id: { type: string, example: doc_123 }
+        source_id: { type: string, example: yuque:abc123 }
+        source: { type: string, enum: [yuque, wechat, qq, web] }
+        title: { type: string }
+        content: { type: string }
+        summary: { type: string }
         tags:
           type: array
-          items: {type: string}
-        author: {type: string}
-        url: {type: string}
-        avatar: {type: string}
-        created_at: {type: string, format: date-time}
-        updated_at: {type: string, format: date-time}
+          items: { type: string }
+        author: { type: string }
+        url: { type: string }
+        avatar: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
     StreamItem:
       type: object
       properties:
-        id: {type: string}
-        title: {type: string}
-        summary: {type: string}
+        id: { type: string }
+        title: { type: string }
+        summary: { type: string }
         tags:
           type: array
-          items: {type: string}
-        created_at: {type: string, format: date-time}
+          items: { type: string }
+        created_at: { type: string, format: date-time }
+
     CreateDocRequest:
       type: object
       required: [title, content, source]
       properties:
-        title: {type: string}
-        content: {type: string}
+        title: { type: string }
+        content: { type: string }
         tags:
           type: array
-          items: {type: string}
-        source: {type: string}
+          items: { type: string }
+        source: { type: string }
     UpdateDocRequest:
       allOf:
         - $ref: '#/components/schemas/CreateDocRequest'
+
     PreprocessCleanRequest:
       type: object
       required: [content]
       properties:
-        content: {type: string}
+        content: { type: string }
     PreprocessCleanResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            cleaned_content: {type: string}
+            cleaned_content: { type: string }
+
     PreprocessDedupRequest:
       type: object
       required: [content]
       properties:
-        content: {type: string}
+        content: { type: string }
     PreprocessDedupResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            is_duplicate: {type: boolean}
-            similar_id: {type: string}
+            is_duplicate: { type: boolean }
+            similar_id: { type: string }
+
     PreprocessTagsRequest:
       type: object
       required: [content]
       properties:
-        content: {type: string}
+        content: { type: string }
     PreprocessTagsResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
             tags:
               type: array
-              items: {type: string}
+              items: { type: string }
             keywords:
               type: array
-              items: {type: string}
+              items: { type: string }
+
     AiSummaryRequest:
       type: object
       required: [content]
       properties:
-        content: {type: string}
+        content: { type: string }
     AiSummaryResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            summary: {type: string}
+            summary: { type: string }
+
     AiClassifyRequest:
       type: object
       required: [content]
       properties:
-        content: {type: string}
+        content: { type: string }
     AiClassifyResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            category: {type: string, example: 通知}
-            confidence: {type: number, format: float, example: 0.95}
+            category: { type: string, example: 通知 }
+            confidence: { type: number, format: float, example: 0.95 }
+
     AiRecognizeRequest:
       type: object
       required: [file]
       properties:
-        file: {type: string, description: base64 或 文件链接}
+        file: { type: string, description: base64 或 文件链接 }
     AiRecognizeResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            type: {type: string, enum: [image, table, formula]}
-            result: {type: object, additionalProperties: true}
+            type: { type: string, enum: [image, table, formula] }
+            result: { type: object, additionalProperties: true }
+
     SearchRequest:
       type: object
       properties:
-        query: {type: string}
-        category: {type: string}
-        tag: {type: string}
-        mode: {type: string, enum: [vector, precise, hybrid]}
+        query: { type: string }
+        category: { type: string }
+        tag: { type: string }
+        mode: { type: string, enum: [vector, precise, hybrid] }
     SearchItem:
       type: object
       properties:
-        id: {type: string}
-        title: {type: string}
-        summary: {type: string}
+        id: { type: string }
+        title: { type: string }
+        summary: { type: string }
         tags:
           type: array
-          items: {type: string}
-        created_at: {type: string, format: date-time}
+          items: { type: string }
+        created_at: { type: string, format: date-time }
+
     WebhookPushRequest:
       type: object
       required: [target_url, payload]
       properties:
-        target_url: {type: string}
+        target_url: { type: string }
         payload:
           type: object
           additionalProperties: true
@@ -846,48 +757,50 @@ components:
       type: object
       required: [to, subject, content]
       properties:
-        to: {type: string}
-        subject: {type: string}
-        content: {type: string}
+        to: { type: string }
+        subject: { type: string }
+        content: { type: string }
+
     ImportJobRequest:
       type: object
       required: [path, format, schema_version, source]
       properties:
-        path: {type: string, example: "s3://bucket/folder/docs-20251010.ndjson.gz"}
-        format: {type: string, enum: [ndjson, parquet]}
-        schema_version: {type: string, example: '1.0.0'}
-        source: {type: string, example: yuque}
+        path: { type: string, example: s3://bucket/folder/docs-20251010.ndjson.gz }
+        format: { type: string, enum: [ndjson, parquet] }
+        schema_version: { type: string, example: '1.0.0' }
+        source: { type: string, example: yuque }
     StdCreatedJob:
       type: object
       properties:
-        code: {type: integer, example: 201}
-        msg: {type: string, example: created}
+        code: { type: integer, example: 201 }
+        msg: { type: string, example: created }
         data:
           type: object
           properties:
-            job_id: {type: string, example: imp_123}
+            job_id: { type: string, example: imp_123 }
     ImportJobStatus:
       type: object
       properties:
-        code: {type: integer, example: 200}
-        msg: {type: string, example: success}
+        code: { type: integer, example: 200 }
+        msg: { type: string, example: success }
         data:
           type: object
           properties:
-            status: {type: string, enum: [queued, running, succeeded, failed, partial]}
-            processed: {type: integer, example: 5000}
-            failed: {type: integer, example: 3}
-            next_cursor: {type: string, nullable: true}
+            status: { type: string, enum: [queued, running, succeeded, failed, partial] }
+            processed: { type: integer, example: 5000 }
+            failed: { type: integer, example: 3 }
+            next_cursor: { type: string, nullable: true }
+
     ViewResponse:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: object
           properties:
-            id: {type: string}
-            name: {type: string}
+            id: { type: string }
+            name: { type: string }
             query:
               type: object
               additionalProperties: true
@@ -896,49 +809,49 @@ components:
       type: object
       required: [platform, target, content]
       properties:
-        platform: {type: string, example: qq}
-        target: {type: string, example: "group:123456"}
-        content: {type: string}
+        platform: { type: string, example: qq }
+        target: { type: string, example: group:123456 }
+        content: { type: string }
+
     StdResponseDoc:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
-        data: {$ref: '#/components/schemas/Doc'}
+        code: { type: integer }
+        msg: { type: string }
+        data: { $ref: '#/components/schemas/Doc' }
     StdListResponseDoc:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: array
-          items: {$ref: '#/components/schemas/Doc'}
+          items: { $ref: '#/components/schemas/Doc' }
     StdListResponseStreamItem:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: array
-          items: {$ref: '#/components/schemas/StreamItem'}
+          items: { $ref: '#/components/schemas/StreamItem' }
     StdListResponseSearchItem:
       type: object
       properties:
-        code: {type: integer}
-        msg: {type: string}
+        code: { type: integer }
+        msg: { type: string }
         data:
           type: array
-          items: {$ref: '#/components/schemas/SearchItem'}
+          items: { $ref: '#/components/schemas/SearchItem' }
+
   examples:
     DocListSuccess:
       value:
         code: 200
         msg: success
         data:
-          - {id: "doc_1", source_id: "yuque:1", source: yuque, title: "A", summary: "...",
-            tags: ["通知"], created_at: "2025-10-10T09:00:00Z"}
-          - {id: "doc_2", source_id: "web:2", source: web, title: "B", summary: "...",
-            tags: ["活动"], created_at: "2025-10-09T09:00:00Z"}
+          - { id: "doc_1", source_id: "yuque:1", source: yuque, title: "A", summary: "...", tags: ["通知"], created_at: "2025-10-10T09:00:00Z" }
+          - { id: "doc_2", source_id: "web:2", source: web, title: "B", summary: "...", tags: ["活动"], created_at: "2025-10-09T09:00:00Z" }
     DocDetailSuccess:
       value:
         code: 200
@@ -1011,24 +924,3 @@ components:
         msg: success
         data:
           new_version: v2
-tags:
-  - name: Ai
-    description: Auto-generated tag for Ai
-  - name: Bot
-    description: Auto-generated tag for Bot
-  - name: Docs
-    description: Auto-generated tag for Docs
-  - name: Graphql
-    description: Auto-generated tag for Graphql
-  - name: Imports
-    description: Auto-generated tag for Imports
-  - name: Preprocess
-    description: Auto-generated tag for Preprocess
-  - name: Push
-    description: Auto-generated tag for Push
-  - name: Search
-    description: Auto-generated tag for Search
-  - name: Stream
-    description: Auto-generated tag for Stream
-  - name: Views
-    description: Auto-generated tag for Views

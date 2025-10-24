@@ -5,6 +5,7 @@
 - `samples/`           —— 各接口的 Golden JSON 示例数据
 - `samples/ndjson/`    —— 批量导入用 NDJSON 示例
 - `server/`            —— FastAPI Mock 服务代码
+- `tools/`             —— 验证与检查的相关脚本
 
 ## 快速启动
 
@@ -65,6 +66,22 @@
    - 使用 Apifox 的 Mock 功能，快速验证接口的响应数据。
 
 通过 Apifox，可以更高效地进行接口调试和契约验证，提升开发与联调效率。
+
+## 验证与检查（仓库脚本）
+因为有同志反映运行出错（我本地解析正常所以完全没意识到那个错误），我意识到必须要提高 mock service 的鲁棒性，所以让 LLM 生成了一批验证格式的脚本。后续可能会添加进 CI。
+
+`tools`目录内有一些简单脚本可以在本地快速检查 OpenAPI 契约质量：
+
+- 检查 YAML 是否存在重复的 Mapping key（基于严格加载器）：
+   ```pwsh
+   python tools/check_dup_yaml.py contracts/openapi.yaml
+   ```
+
+- 使用 Spectral 进行契约 lint（需先安装或使用 npx）：
+   ```pwsh
+   # 使用 npx（无需全局安装）
+   npx @stoplight/spectral lint contracts/openapi.yaml --ruleset .spectral.yaml
+   ```
 
 ## 说明
 - 所有接口响应结构、字段、示例均与《协作对接方案（草案）》保持一致。

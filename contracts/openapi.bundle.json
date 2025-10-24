@@ -1,0 +1,2949 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Nova 信息流 API",
+    "version": "1.0.0",
+    "description": "面向协作与 Mock 的契约。统一响应结构：{\"code\", \"msg\", \"data\", \"trace_id?\"}"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4010",
+      "description": "本地 Mock 服务器（Prism 示例端口）"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "本地开发服务器（FastAPI 示例端口）"
+    }
+  ],
+  "paths": {
+    "/api/v1/docs": {
+      "get": {
+        "summary": "获取文档列表",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "yuque",
+                "wechat",
+                "qq",
+                "web"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "created_at:desc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "fields",
+            "schema": {
+              "type": "string",
+              "example": "id,title,summary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "source_id",
+                          "title",
+                          "created_at"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "doc_123"
+                          },
+                          "source_id": {
+                            "type": "string",
+                            "example": "yuque:abc123"
+                          },
+                          "source": {
+                            "type": "string",
+                            "enum": [
+                              "yuque",
+                              "wechat",
+                              "qq",
+                              "web"
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "string"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "author": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": 200,
+                      "msg": "success",
+                      "data": [
+                        {
+                          "id": "doc_1",
+                          "source_id": "yuque:1",
+                          "source": "yuque",
+                          "title": "A",
+                          "summary": "...",
+                          "tags": [
+                            "通知"
+                          ],
+                          "created_at": "2025-10-10T09:00:00Z"
+                        },
+                        {
+                          "id": "doc_2",
+                          "source_id": "web:2",
+                          "source": "web",
+                          "title": "B",
+                          "summary": "...",
+                          "tags": [
+                            "活动"
+                          ],
+                          "created_at": "2025-10-09T09:00:00Z"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_docs",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      },
+      "post": {
+        "summary": "新增文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "content",
+                  "source"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "source": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "新文档",
+                    "content": "正文内容",
+                    "tags": [
+                      "通知"
+                    ],
+                    "source": "yuque"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": 201,
+                      "msg": "created",
+                      "data": {
+                        "id": "doc_123"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_docs",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    },
+    "/api/v1/docs/{id}": {
+      "get": {
+        "summary": "获取单个文档",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "source_id",
+                        "title",
+                        "created_at"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "doc_123"
+                        },
+                        "source_id": {
+                          "type": "string",
+                          "example": "yuque:abc123"
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "yuque",
+                            "wechat",
+                            "qq",
+                            "web"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "author": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "avatar": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": 200,
+                      "msg": "success",
+                      "data": {
+                        "id": "doc_1",
+                        "source_id": "yuque:1",
+                        "source": "yuque",
+                        "title": "示例标题",
+                        "content": "这是正文...",
+                        "summary": "摘要...",
+                        "tags": [
+                          "通知"
+                        ],
+                        "author": "张三",
+                        "url": "https://...",
+                        "created_at": "2025-10-10T09:00:00Z",
+                        "updated_at": "2025-10-10T10:00:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "bad request"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    },
+                    "trace_id": {
+                      "type": "string",
+                      "example": "f3e0..."
+                    }
+                  }
+                },
+                "examples": {
+                  "notFound": {
+                    "value": {
+                      "code": 404,
+                      "msg": "not found",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_docs_id",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      },
+      "put": {
+        "summary": "更新文档（整体）",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "title",
+                      "content",
+                      "source"
+                    ],
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "source": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "integer",
+                          "example": 200
+                        },
+                        "msg": {
+                          "type": "string",
+                          "example": "success"
+                        },
+                        "data": {
+                          "type": "object",
+                          "nullable": true
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "operationId": "put_api_v1_docs_id",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      },
+      "delete": {
+        "summary": "删除文档",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "deleted"
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "delete_api_v1_docs_id",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    },
+    "/api/v1/preprocess/clean": {
+      "post": {
+        "summary": "文本清洗",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "content": "【广告】同学们大家好！\n活动时间：..."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cleaned_content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_preprocess_clean",
+        "description": "TODO: add description.",
+        "tags": [
+          "Preprocess"
+        ]
+      }
+    },
+    "/api/v1/preprocess/dedup": {
+      "post": {
+        "summary": "去重检测",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "is_duplicate": {
+                          "type": "boolean"
+                        },
+                        "similar_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_preprocess_dedup",
+        "description": "TODO: add description.",
+        "tags": [
+          "Preprocess"
+        ]
+      }
+    },
+    "/api/v1/preprocess/tags": {
+      "post": {
+        "summary": "分词与标签提取",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_preprocess_tags",
+        "description": "TODO: add description.",
+        "tags": [
+          "Preprocess"
+        ]
+      }
+    },
+    "/api/v1/ai/summary": {
+      "post": {
+        "summary": "生成摘要",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "summary": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_ai_summary",
+        "description": "TODO: add description.",
+        "tags": [
+          "Ai"
+        ]
+      }
+    },
+    "/api/v1/ai/classify": {
+      "post": {
+        "summary": "文本分类",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "type": "string",
+                          "example": "通知"
+                        },
+                        "confidence": {
+                          "type": "number",
+                          "format": "float",
+                          "example": 0.95
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_ai_classify",
+        "description": "TODO: add description.",
+        "tags": [
+          "Ai"
+        ]
+      }
+    },
+    "/api/v1/ai/recognize": {
+      "post": {
+        "summary": "图片/表格/公式识别",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "base64 或 文件链接"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "image",
+                            "table",
+                            "formula"
+                          ]
+                        },
+                        "result": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_ai_recognize",
+        "description": "TODO: add description.",
+        "tags": [
+          "Ai"
+        ]
+      }
+    },
+    "/api/v1/push/webhook": {
+      "post": {
+        "summary": "推送到 Webhook",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "target_url",
+                  "payload"
+                ],
+                "properties": {
+                  "target_url": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_push_webhook",
+        "description": "TODO: add description.",
+        "tags": [
+          "Push"
+        ]
+      }
+    },
+    "/api/v1/push/rss": {
+      "get": {
+        "summary": "生成 RSS（示意，不在 Mock 返回 XML）",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "xml feed",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<rss><channel><title>Nova Feed</title></channel></rss>\n"
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_push_rss",
+        "description": "TODO: add description.",
+        "tags": [
+          "Push"
+        ]
+      }
+    },
+    "/api/v1/push/email": {
+      "post": {
+        "summary": "邮件推送",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "to",
+                  "subject",
+                  "content"
+                ],
+                "properties": {
+                  "to": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_push_email",
+        "description": "TODO: add description.",
+        "tags": [
+          "Push"
+        ]
+      }
+    },
+    "/api/v1/stream": {
+      "get": {
+        "summary": "获取信息流",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "string"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_stream",
+        "description": "TODO: add description.",
+        "tags": [
+          "Stream"
+        ]
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "summary": "检索（短查询）",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mode",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "vector",
+                "precise",
+                "hybrid"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "string"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_search",
+        "description": "TODO: add description.",
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/api/v1/views/{id}": {
+      "get": {
+        "summary": "获取保存的视图",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "query": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": 200,
+                      "msg": "success",
+                      "data": {
+                        "id": "view_001",
+                        "name": "最近通知",
+                        "query": {
+                          "tag": "通知",
+                          "sort": "created_at:desc"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_views_id",
+        "description": "TODO: add description.",
+        "tags": [
+          "Views"
+        ]
+      }
+    },
+    "/api/v1/bot/send": {
+      "post": {
+        "summary": "Bot 发送消息",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "platform",
+                  "target",
+                  "content"
+                ],
+                "properties": {
+                  "platform": {
+                    "type": "string",
+                    "example": "qq"
+                  },
+                  "target": {
+                    "type": "string",
+                    "example": "group:123456"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_bot_send",
+        "description": "TODO: add description.",
+        "tags": [
+          "Bot"
+        ]
+      }
+    },
+    "/graphql": {
+      "post": {
+        "summary": "GraphQL 端点（支持查询和检索）",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "stream": {
+                          "items": [
+                            {
+                              "id": "doc_1",
+                              "title": "A"
+                            },
+                            {
+                              "id": "doc_2",
+                              "title": "B"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_graphql",
+        "description": "TODO: add description.",
+        "tags": [
+          "Graphql"
+        ]
+      }
+    },
+    "/api/v1/imports": {
+      "post": {
+        "summary": "提交导入作业",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "path",
+                  "format",
+                  "schema_version",
+                  "source"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "example": "s3://bucket/folder/docs-20251010.ndjson.gz"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "ndjson",
+                      "parquet"
+                    ]
+                  },
+                  "schema_version": {
+                    "type": "string",
+                    "example": "1.0.0"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "yuque"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "path": "s3://bucket/folder/docs-20251010.ndjson.gz",
+                    "format": "ndjson",
+                    "schema_version": "1.0.0",
+                    "source": "yuque"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "job_id": {
+                          "type": "string",
+                          "example": "imp_123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_imports",
+        "description": "TODO: add description.",
+        "tags": [
+          "Imports"
+        ]
+      }
+    },
+    "/api/v1/imports/{job_id}": {
+      "get": {
+        "summary": "查询导入作业",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "queued",
+                            "running",
+                            "succeeded",
+                            "failed",
+                            "partial"
+                          ]
+                        },
+                        "processed": {
+                          "type": "integer",
+                          "example": 5000
+                        },
+                        "failed": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "next_cursor": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_imports_job_id",
+        "description": "TODO: add description.",
+        "tags": [
+          "Imports"
+        ]
+      }
+    },
+    "/api/v1/docs/{doc_id}/versions": {
+      "get": {
+        "summary": "获取文档的历史版本列表",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "versions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "version_id": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "author": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_docs_doc_id_versions",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    },
+    "/api/v1/docs/{doc_id}/versions/{commit_hash}": {
+      "get": {
+        "summary": "获取文档的特定历史版本",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "commit_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_docs_doc_id_versions_commit_hash",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    },
+    "/api/v1/docs/{doc_id}/diff": {
+      "get": {
+        "summary": "获取文档的版本差异",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from_commit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to_commit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "diff": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get_api_v1_docs_doc_id_diff",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    },
+    "/api/v1/docs/{doc_id}/revert": {
+      "post": {
+        "summary": "回滚文档到指定版本",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commit_hash": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "reverted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "new_version": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post_api_v1_docs_doc_id_revert",
+        "description": "TODO: add description.",
+        "tags": [
+          "Docs"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StdOk": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          }
+        }
+      },
+      "StdError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 400
+          },
+          "msg": {
+            "type": "string",
+            "example": "bad request"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "trace_id": {
+            "type": "string",
+            "example": "f3e0..."
+          }
+        }
+      },
+      "StdCreatedId": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "StdUpdatedId": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 200
+              },
+              "msg": {
+                "type": "string",
+                "example": "success"
+              },
+              "data": {
+                "type": "object",
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "StdDeleted": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "example": "deleted"
+          },
+          "data": {
+            "nullable": true
+          }
+        }
+      },
+      "Doc": {
+        "type": "object",
+        "required": [
+          "id",
+          "source_id",
+          "title",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "doc_123"
+          },
+          "source_id": {
+            "type": "string",
+            "example": "yuque:abc123"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "yuque",
+              "wechat",
+              "qq",
+              "web"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "author": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StreamItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateDocRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "content",
+          "source"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateDocRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "title",
+              "content",
+              "source"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "source": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "PreprocessCleanRequest": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "PreprocessCleanResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "cleaned_content": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PreprocessDedupRequest": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "PreprocessDedupResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "is_duplicate": {
+                "type": "boolean"
+              },
+              "similar_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PreprocessTagsRequest": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "PreprocessTagsResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AiSummaryRequest": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "AiSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "summary": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "AiClassifyRequest": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "AiClassifyResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "example": "通知"
+              },
+              "confidence": {
+                "type": "number",
+                "format": "float",
+                "example": 0.95
+              }
+            }
+          }
+        }
+      },
+      "AiRecognizeRequest": {
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "base64 或 文件链接"
+          }
+        }
+      },
+      "AiRecognizeResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "image",
+                  "table",
+                  "formula"
+                ]
+              },
+              "result": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "SearchRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "vector",
+              "precise",
+              "hybrid"
+            ]
+          }
+        }
+      },
+      "SearchItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WebhookPushRequest": {
+        "type": "object",
+        "required": [
+          "target_url",
+          "payload"
+        ],
+        "properties": {
+          "target_url": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "EmailPushRequest": {
+        "type": "object",
+        "required": [
+          "to",
+          "subject",
+          "content"
+        ],
+        "properties": {
+          "to": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "ImportJobRequest": {
+        "type": "object",
+        "required": [
+          "path",
+          "format",
+          "schema_version",
+          "source"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "example": "s3://bucket/folder/docs-20251010.ndjson.gz"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "ndjson",
+              "parquet"
+            ]
+          },
+          "schema_version": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "source": {
+            "type": "string",
+            "example": "yuque"
+          }
+        }
+      },
+      "StdCreatedJob": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 201
+          },
+          "msg": {
+            "type": "string",
+            "example": "created"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "example": "imp_123"
+              }
+            }
+          }
+        }
+      },
+      "ImportJobStatus": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "running",
+                  "succeeded",
+                  "failed",
+                  "partial"
+                ]
+              },
+              "processed": {
+                "type": "integer",
+                "example": 5000
+              },
+              "failed": {
+                "type": "integer",
+                "example": 3
+              },
+              "next_cursor": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "ViewResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "BotSendRequest": {
+        "type": "object",
+        "required": [
+          "platform",
+          "target",
+          "content"
+        ],
+        "properties": {
+          "platform": {
+            "type": "string",
+            "example": "qq"
+          },
+          "target": {
+            "type": "string",
+            "example": "group:123456"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "StdResponseDoc": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "id",
+              "source_id",
+              "title",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "doc_123"
+              },
+              "source_id": {
+                "type": "string",
+                "example": "yuque:abc123"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "yuque",
+                  "wechat",
+                  "qq",
+                  "web"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "author": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "avatar": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "StdListResponseDoc": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "source_id",
+                "title",
+                "created_at"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "doc_123"
+                },
+                "source_id": {
+                  "type": "string",
+                  "example": "yuque:abc123"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "yuque",
+                    "wechat",
+                    "qq",
+                    "web"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "author": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "avatar": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "StdListResponseStreamItem": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "StdListResponseSearchItem": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "DocListSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": [
+            {
+              "id": "doc_1",
+              "source_id": "yuque:1",
+              "source": "yuque",
+              "title": "A",
+              "summary": "...",
+              "tags": [
+                "通知"
+              ],
+              "created_at": "2025-10-10T09:00:00Z"
+            },
+            {
+              "id": "doc_2",
+              "source_id": "web:2",
+              "source": "web",
+              "title": "B",
+              "summary": "...",
+              "tags": [
+                "活动"
+              ],
+              "created_at": "2025-10-09T09:00:00Z"
+            }
+          ]
+        }
+      },
+      "DocDetailSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "id": "doc_1",
+            "source_id": "yuque:1",
+            "source": "yuque",
+            "title": "示例标题",
+            "content": "这是正文...",
+            "summary": "摘要...",
+            "tags": [
+              "通知"
+            ],
+            "author": "张三",
+            "url": "https://...",
+            "created_at": "2025-10-10T09:00:00Z",
+            "updated_at": "2025-10-10T10:00:00Z"
+          }
+        }
+      },
+      "CreateDocRequest": {
+        "value": {
+          "title": "新文档",
+          "content": "正文内容",
+          "tags": [
+            "通知"
+          ],
+          "source": "yuque"
+        }
+      },
+      "PreprocessCleanRequest": {
+        "value": {
+          "content": "【广告】同学们大家好！\n活动时间：..."
+        }
+      },
+      "ImportJobRequest": {
+        "value": {
+          "path": "s3://bucket/folder/docs-20251010.ndjson.gz",
+          "format": "ndjson",
+          "schema_version": "1.0.0",
+          "source": "yuque"
+        }
+      },
+      "DocVersionListSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "versions": [
+              {
+                "version_id": "v1",
+                "message": "初始版本",
+                "author": "用户A",
+                "timestamp": "2025-10-10T09:00:00Z"
+              },
+              {
+                "version_id": "v2",
+                "message": "更新标题",
+                "author": "用户B",
+                "timestamp": "2025-10-11T09:00:00Z"
+              }
+            ]
+          }
+        }
+      },
+      "DocVersionDetailSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "content": "这是文档的特定历史版本内容。"
+          }
+        }
+      },
+      "DocDiffSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "diff": "--- a.txt\n+++ b.txt\n@@ -1,3 +1,3 @@\n- Hello World\n+ Hello Nova\n- This is a sample document.\n+ This is a Nova sample document.\n- Have a nice day!\n+ Have a nice Nova day!"
+          }
+        }
+      },
+      "DocRevertSuccess": {
+        "value": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "new_version": "v2"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Ai",
+      "description": "Auto-generated tag for Ai"
+    },
+    {
+      "name": "Bot",
+      "description": "Auto-generated tag for Bot"
+    },
+    {
+      "name": "Docs",
+      "description": "Auto-generated tag for Docs"
+    },
+    {
+      "name": "Graphql",
+      "description": "Auto-generated tag for Graphql"
+    },
+    {
+      "name": "Imports",
+      "description": "Auto-generated tag for Imports"
+    },
+    {
+      "name": "Preprocess",
+      "description": "Auto-generated tag for Preprocess"
+    },
+    {
+      "name": "Push",
+      "description": "Auto-generated tag for Push"
+    },
+    {
+      "name": "Search",
+      "description": "Auto-generated tag for Search"
+    },
+    {
+      "name": "Stream",
+      "description": "Auto-generated tag for Stream"
+    },
+    {
+      "name": "Views",
+      "description": "Auto-generated tag for Views"
+    }
+  ]
+}
